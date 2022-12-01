@@ -1,3 +1,5 @@
+using LanguageExt;
+
 namespace advent_of_code_2022;
 
 public class Day01
@@ -15,19 +17,13 @@ public class Day01
         return GetElves(input).OrderDescending().Take(3).Sum();
     }
 
-    private static IEnumerable<int> GetElves(IReadOnlyCollection<string> input)
+    private static IEnumerable<int> GetElves(IEnumerable<string> input)
     {
-        var separators = input.Select((item, index) => string.IsNullOrEmpty(item) ? index : -1).Where(i => i > -1).ToList();
-        separators.Add(input.Count);
-        
-        var currentStart = 0;
-        foreach (var currentSeparatorPosition in separators)
-        {
-            var items = input.Skip(currentStart).Take(currentSeparatorPosition - currentStart);
-            var currentCalories = items.Sum(item => int.TryParse(item, out var val) ? val : 0);
-            currentStart = currentSeparatorPosition + 1;
-
-            yield return currentCalories;
-        }
+        return input.Aggregate(
+            Lst<int>.Empty.Add(0),
+            (elves, calories) =>
+                int.TryParse(calories, out var val)
+                    ? elves.SetItem(elves.Count - 1, elves.Last() + val)
+                    : elves.Add(0));
     }
 }
