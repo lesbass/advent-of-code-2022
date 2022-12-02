@@ -2,7 +2,7 @@ using LanguageExt;
 
 namespace advent_of_code_2022;
 
-public class Day01
+public static class Day01
 {
     public const string TestFileName = "Day01_test";
     public const string ProductionFileName = "Day01";
