@@ -18,6 +18,6 @@ public class Day02Tests
     {
         var input = Utils.ReadInput(ProductionFileName);
 
-        Assert.Equal(209914, Day02.Part2(input));
+        Assert.Equal(9975, Day02.Part2(input));
     }
 }
