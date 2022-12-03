@@ -1,16 +1,16 @@
 using Xunit;
-using static advent_of_code_2022.Day01;
+using static advent_of_code_2022.Day03;
 
 namespace advent_of_code_2022.tests;
 
-public class Day01Tests
+public class Day03Tests
 {
     [Fact]
     public void Part1_Test()
     {
         var input = Utils.ReadInput(ProductionFileName);
 
-        Assert.Equal(74198, Part1(input));
+        Assert.Equal(7824, Part1(input));
     }
 
     [Fact]
@@ -18,6 +18,6 @@ public class Day01Tests
     {
         var input = Utils.ReadInput(ProductionFileName);
 
-        Assert.Equal(209914, Part2(input));
+        Assert.Equal(2798, Part2(input));
     }
 }
