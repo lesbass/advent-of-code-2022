@@ -32,11 +32,17 @@ public static class Day04
     public record ElvesPair(Elf First, Elf Second)
     {
         public bool CompletelyOverlaps =>
-            Second.Sections.All(n => First.Sections.Contains(n)) ||
-            First.Sections.All(n => Second.Sections.Contains(n));
+            First.Sections.Count > Second.Sections.Count
+                ? CheckCompleteOverlap(Second.Sections, First.Sections)
+                : CheckCompleteOverlap(First.Sections, Second.Sections);
 
         public bool PartiallyOverlaps =>
-            Second.Sections.Any(n => First.Sections.Contains(n));
+            First.Sections.Intersect(Second.Sections).Any();
+
+        private static bool CheckCompleteOverlap(IReadOnlyCollection<int> smallList, IEnumerable<int> bigList)
+        {
+            return smallList.Intersect(bigList).Count() == smallList.Count;
+        }
 
         public static ElvesPair FromString(string row)
         {
