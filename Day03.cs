@@ -34,21 +34,21 @@ public static class Day03
                 join b in chars on a equals b
                 select a).ToList());
     }
-}
 
-public record Rucksack(char[] Compartment1, char[] Compartment2, char[] AllItems)
-{
-    public IEnumerable<char> WrongPlacements =>
-        (from a in Compartment1
-            join b in Compartment2
-                on a equals b
-            select a).ToArray();
-
-    public static Rucksack FromString(string s)
+    public record Rucksack(char[] Compartment1, char[] Compartment2, char[] AllItems)
     {
-        var chars = s.Trim().ToCharArray();
-        var midPoint = (int)Math.Floor(chars.Length / 2d);
-        var compartments = chars.Chunk(midPoint).ToArray();
-        return new Rucksack(compartments[0], compartments[1], chars.ToArray());
+        public IEnumerable<char> WrongPlacements =>
+            (from a in Compartment1
+                join b in Compartment2
+                    on a equals b
+                select a).ToArray();
+
+        public static Rucksack FromString(string s)
+        {
+            var chars = s.Trim().ToCharArray();
+            var midPoint = (int)Math.Floor(chars.Length / 2d);
+            var compartments = chars.Chunk(midPoint).ToArray();
+            return new Rucksack(compartments[0], compartments[1], chars.ToArray());
+        }
     }
 }

@@ -2,6 +2,12 @@ namespace advent_of_code_2022;
 
 public static class Day02
 {
+    public enum Results
+    {
+        Draw = 3,
+        Win = 6
+    }
+
     public const string TestFileName = "Day02_test";
     public const string ProductionFileName = "Day02";
 
@@ -51,85 +57,79 @@ public static class Day02
 
         return Match.FromResult(p1, result);
     }
-}
 
-public enum Results
-{
-    Draw = 3,
-    Win = 6
-}
-
-public abstract record Bet
-{
-    public abstract char Letter { get; }
-    protected abstract int Value { get; }
-
-    public abstract Bet WinsAgainst { get; }
-    public abstract Bet LosesAgainst { get; }
-
-    public int Play(Bet other)
+    public abstract record Bet
     {
-        if (other.GetType() == GetType()) return Value + (int)Results.Draw;
-        if (other.GetType() == WinsAgainst.GetType()) return Value + (int)Results.Win;
-        return Value;
-    }
-}
+        public abstract char Letter { get; }
+        protected abstract int Value { get; }
 
-public record Rock : Bet
-{
-    public override char Letter => 'A';
-    protected override int Value => 1;
+        public abstract Bet WinsAgainst { get; }
+        public abstract Bet LosesAgainst { get; }
 
-    public override Bet WinsAgainst => new Scissors();
-    public override Bet LosesAgainst => new Paper();
-}
-
-public record Paper : Bet
-{
-    public override char Letter => 'B';
-    protected override int Value => 2;
-
-    public override Bet WinsAgainst => new Rock();
-    public override Bet LosesAgainst => new Scissors();
-}
-
-public record Scissors : Bet
-{
-    public override char Letter => 'C';
-    protected override int Value => 3;
-
-    public override Bet WinsAgainst => new Paper();
-    public override Bet LosesAgainst => new Rock();
-}
-
-public record Match(Bet Player1, Bet Player2)
-{
-    public int Result => Player2.Play(Player1);
-
-    public static Match FromStrings(char p1, char p2)
-    {
-        var bets = new List<Bet> { new Scissors(), new Paper(), new Rock() }
-            .ToDictionary(item => item.Letter, item => item);
-
-        var player1 = bets[p1];
-        var player2 = bets[p2];
-        return new Match(player1, player2);
-    }
-
-    public static Match FromResult(char p1, char result)
-    {
-        var bets = new List<Bet> { new Scissors(), new Paper(), new Rock() }
-            .ToDictionary(item => item.Letter, item => item);
-
-        var player1 = bets[p1];
-
-        var player2 = result switch
+        public int Play(Bet other)
         {
-            'X' => player1.WinsAgainst,
-            'Z' => player1.LosesAgainst,
-            _ => player1
-        };
+            if (other.GetType() == GetType()) return Value + (int)Results.Draw;
+            if (other.GetType() == WinsAgainst.GetType()) return Value + (int)Results.Win;
+            return Value;
+        }
+    }
 
-        return new Match(player1, player2);
+    public record Rock : Bet
+    {
+        public override char Letter => 'A';
+        protected override int Value => 1;
+
+        public override Bet WinsAgainst => new Scissors();
+        public override Bet LosesAgainst => new Paper();
+    }
+
+    public record Paper : Bet
+    {
+        public override char Letter => 'B';
+        protected override int Value => 2;
+
+        public override Bet WinsAgainst => new Rock();
+        public override Bet LosesAgainst => new Scissors();
+    }
+
+    public record Scissors : Bet
+    {
+        public override char Letter => 'C';
+        protected override int Value => 3;
+
+        public override Bet WinsAgainst => new Paper();
+        public override Bet LosesAgainst => new Rock();
+    }
+
+    public record Match(Bet Player1, Bet Player2)
+    {
+        public int Result => Player2.Play(Player1);
+
+        public static Match FromStrings(char p1, char p2)
+        {
+            var bets = new List<Bet> { new Scissors(), new Paper(), new Rock() }
+                .ToDictionary(item => item.Letter, item => item);
+
+            var player1 = bets[p1];
+            var player2 = bets[p2];
+            return new Match(player1, player2);
+        }
+
+        public static Match FromResult(char p1, char result)
+        {
+            var bets = new List<Bet> { new Scissors(), new Paper(), new Rock() }
+                .ToDictionary(item => item.Letter, item => item);
+
+            var player1 = bets[p1];
+
+            var player2 = result switch
+            {
+                'X' => player1.WinsAgainst,
+                'Z' => player1.LosesAgainst,
+                _ => player1
+            };
+
+            return new Match(player1, player2);
+        }
     }
 }

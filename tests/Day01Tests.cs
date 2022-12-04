@@ -10,7 +10,7 @@ public class Day01Tests
     {
         var input = Utils.ReadInput(ProductionFileName);
 
-        Assert.Equal(74198, Part1(input));
+        Assert.Equal(Utils.GetResult("DAY01_PART1"), Part1(input));
     }
 
     [Fact]
@@ -18,6 +18,6 @@ public class Day01Tests
     {
         var input = Utils.ReadInput(ProductionFileName);
 
-        Assert.Equal(209914, Part2(input));
+        Assert.Equal(Utils.GetResult("DAY01_PART2"), Part2(input));
     }
 }
