@@ -16,4 +16,9 @@ public static class Utils
     {
         return int.Parse(Environment.GetEnvironmentVariable(name) ?? "0");
     }
+
+    public static string GetResultRaw(string name)
+    {
+        return Environment.GetEnvironmentVariable(name) ?? "";
+    }
 }
