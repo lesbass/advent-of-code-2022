@@ -17,9 +17,8 @@ public static class Day06
 
     private static int FindRepeatedSequences(string signal, int length, int currentPos = 0)
     {
-        if (signal.Length < length) return 0;
-        return signal.Take(length).Distinct().Count() == length
-            ? currentPos + length
-            : FindRepeatedSequences(signal[1..], length, currentPos + 1);
+        return signal.Take(length).Distinct().Count() < length
+            ? FindRepeatedSequences(signal[1..], length, currentPos + 1)
+            : currentPos + length;
     }
 }

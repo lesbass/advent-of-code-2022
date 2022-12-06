@@ -60,7 +60,7 @@ public static class Day05
             stacks.Reverse();
             var stacksCount = int.Parse(stacks[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last());
 
-            var stacksOfCrate = Enumerable.Range(0, stacksCount).Select(it => new List<Crate>()).ToList();
+            var stacksOfCrate = Enumerable.Range(0, stacksCount).Select(_ => new List<Crate>()).ToList();
 
             foreach (var row in stacks.Skip(1))
             {

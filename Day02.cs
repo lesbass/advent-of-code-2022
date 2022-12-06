@@ -2,12 +2,6 @@ namespace advent_of_code_2022;
 
 public static class Day02
 {
-    public enum Results
-    {
-        Draw = 3,
-        Win = 6
-    }
-
     public const string TestFileName = "Day02_test";
     public const string ProductionFileName = "Day02";
 
@@ -58,6 +52,12 @@ public static class Day02
         return Match.FromResult(p1, result);
     }
 
+    private enum Results
+    {
+        Draw = 3,
+        Win = 6
+    }
+
     public abstract record Bet
     {
         public abstract char Letter { get; }
@@ -74,7 +74,7 @@ public static class Day02
         }
     }
 
-    public record Rock : Bet
+    private record Rock : Bet
     {
         public override char Letter => 'A';
         protected override int Value => 1;
@@ -83,7 +83,7 @@ public static class Day02
         public override Bet LosesAgainst => new Paper();
     }
 
-    public record Paper : Bet
+    private record Paper : Bet
     {
         public override char Letter => 'B';
         protected override int Value => 2;
@@ -92,7 +92,7 @@ public static class Day02
         public override Bet LosesAgainst => new Scissors();
     }
 
-    public record Scissors : Bet
+    private record Scissors : Bet
     {
         public override char Letter => 'C';
         protected override int Value => 3;
