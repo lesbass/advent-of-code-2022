@@ -6,31 +6,32 @@ public static class Day07
 {
     public const string TestFileName = "Day07_test";
     public const string ProductionFileName = "Day07";
+    private const int TotalFsSize = 70_000_000;
+    private const int RequiredSpace = 30_000_000;
 
     public static int Part1(IEnumerable<string> input)
     {
-        var fs = ParseFs(input);
+        var smallDirs = GetDirectorySizes(input)
+            .Where(it => it < 100_000).ToList();
 
-        var directories = fs.GetAllDirectories();
-        var smallDirs = directories.Add(fs).Where(it => it.TotalSize < 100000).ToList();
-
-        return smallDirs.Sum(it => it.TotalSize);
+        return smallDirs.Sum(it => it);
     }
 
     public static int Part2(IEnumerable<string> input)
     {
-        var totalFsSize = 70000000;
-        var requiredSpace = 30000000;
+        var directorySizes = GetDirectorySizes(input);
+        var freeSpace = TotalFsSize - directorySizes.Max();
+        var spaceToFreeUp = RequiredSpace - freeSpace;
 
+        return directorySizes.Order()
+            .First(it => it >= spaceToFreeUp);
+    }
+
+    private static List<int> GetDirectorySizes(IEnumerable<string> input)
+    {
         var fs = ParseFs(input);
-
-        var directories = fs.GetAllDirectories();
-        var freeSpace = totalFsSize - fs.TotalSize;
-        var spaceToFreeUp = requiredSpace - freeSpace;
-
-        var possibleDirectories = directories.Where(it => it.TotalSize >= spaceToFreeUp).OrderBy(it => it.TotalSize);
-
-        return possibleDirectories.First().TotalSize;
+        return fs.GetAllDirectories().Add(fs)
+            .Select(it => it.TotalSize).ToList();
     }
 
     private static string NormalizeCurrentDir(string s)
@@ -41,30 +42,33 @@ public static class Day07
 
     private static ElficDir ParseFs(IEnumerable<string> input)
     {
-        var fs = new ElficDir("");
-        var currentDir = "/";
-        foreach (var row in input)
+        var (_, result) = input.Aggregate((currentDir: "/", fs: new ElficDir("")), (state, row) =>
+        {
+            var (currentDir, fs) = state;
+
             if (row.StartsWith("$"))
             {
                 var command = row[2..].Split(" ");
-                if (command[0] != "cd") continue;
-                currentDir = command[1] switch
+                if (command[0] != "cd") return state;
+                var tempDir = NormalizeCurrentDir(command[1] switch
                 {
                     "/" => command[1],
                     ".." => string.Join("/", currentDir.Split('/').SkipLast()),
                     _ => $"{currentDir}/{command[1]}"
-                };
+                });
 
-                currentDir = NormalizeCurrentDir(currentDir);
-                fs.MoveToFolder(currentDir);
-            }
-            else
-            {
-                var rowSplit = row.Split(' ');
-                if (int.TryParse(rowSplit[0], out var size)) fs.AddFile(currentDir, rowSplit[1], size);
+                fs.MoveToFolder(tempDir);
+
+                return (tempDir, fs);
             }
 
-        return fs;
+            var rowSplit = row.Split(' ');
+            if (int.TryParse(rowSplit[0], out var size)) fs.AddFile(currentDir, rowSplit[1], size);
+
+            return state;
+        });
+
+        return result;
     }
 
     public record ElficDir(string Name)
